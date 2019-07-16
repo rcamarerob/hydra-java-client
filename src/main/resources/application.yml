@@ -1,0 +1,10 @@
+server:
+  port: 3000
+
+hydra:
+  basePath: http://hydra:4445
+
+logging:
+  level:
+    root: INFO
+    com.rcb: DEBUG

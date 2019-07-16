@@ -1,0 +1,25 @@
+FROM openjdk:8-jre-alpine
+
+LABEL "service"="hydraClient"\
+ "version"="1.0-SNAHPSHOT"
+
+ENV FATJAR_FILE build/libs/hydraClient-1.0-SNAPSHOT.jar
+
+ENV MICROSERVICES_HOME /opt/microservices
+
+ARG SERVICE_PORT
+ENV SERVICE_PORT 3000
+EXPOSE $SERVICE_PORT
+
+ENV URLS_LOGIN http://127.0.0.1:3000/login
+ENV URLS_CONSENT http://127.0.0.1:3000/consent
+ENV URLS_SELF_ISSUER http://127.0.0.1:4444
+ENV URLS_LOGOUT=http://127.0.0.1:3000/logout
+
+COPY $FATJAR_FILE $MICROSERVICES_HOME/
+
+WORKDIR $MICROSERVICES_HOME
+
+ENTRYPOINT ["sh", "-c"]
+
+CMD ["java -jar hydraClient-1.0-SNAPSHOT.jar"]

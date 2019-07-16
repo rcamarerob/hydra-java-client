@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Useless login page</title>
+    <script>
+        function challenge() {
+            var urlParams = new URLSearchParams(window.location.search);
+            document.getElementById("login_challenge").value = urlParams.get("login_challenge");
+        }
+    </script>
+</head>
+<body onload="challenge()">
+<form action="/login" method="post">
+    <input type="hidden" id="login_challenge" name="login_challenge">
+    <input type="text" value="Username"> <br />
+    <input type="text" value="Password"> <br />
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

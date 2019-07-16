@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grant/Consent</title>
+    <script>
+        function challenge() {
+            var urlParams = new URLSearchParams(window.location.search);
+            document.getElementById("consent_challenge").value = urlParams.get("consent_challenge");
+        }
+    </script>
+</head>
+<body onload="challenge()">
+<form action="/consent" method="post" >
+    <input type="hidden" name="consent_challenge" id="consent_challenge" />
+    Do you give the next scopes to your app? Check them: <br/>
+    <input type="checkbox" name="openid" id="openid" checked> Open Id <br/>
+    <input type="submit" value="Submit" />
+</form></body>
+</html>
