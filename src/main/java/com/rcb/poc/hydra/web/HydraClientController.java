@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Slf4j
@@ -33,24 +34,27 @@ public class HydraClientController {
     }
 
     @GetMapping("/login")
-    public RedirectView getLogin(@RequestParam("login_challenge") String loginChallenge) {
+    public String getLogin(@RequestParam("login_challenge") String loginChallenge) {
 
         log.debug("Login challenge {}", loginChallenge);
 
         RestTemplate rt = new RestTemplate();
+        String loginUrl = properties.getBasePath()+properties.getOauthPath()+"login?login_challenge="+loginChallenge;
         //hydra checks if it has already validated the login
-        ResponseEntity<HydraGetResponse>  response = rt.getForEntity(properties.getBasePath()+"/oauth2/auth/requests/login?login_challenge="+loginChallenge, HydraGetResponse.class);
+        ResponseEntity<HydraGetResponse>  response = rt.getForEntity(loginUrl, HydraGetResponse.class);
         //we don't treat the response
         log.info("Login response {}", response.toString());
 
         if(response.getBody().getSkip().equals("true")) {
             CompletedRequest result = acceptLoginRequest(loginChallenge);
             //not showing ui login page, redirect to consent
-            return new RedirectView(result.getRedirectTo());
+            return "redirect:/"+result.getRedirectTo();
         }
 
         //show login page,
-        return new RedirectView("login.html");
+        log.info("Show login page");
+        return "login";
+        //return "login";
     }
 
     @PostMapping("/login")
@@ -68,7 +72,8 @@ public class HydraClientController {
     public String getConsent(@RequestParam("consent_challenge") String challenge) {
 
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<HydraGetResponse> response = rt.getForEntity(properties.getBasePath()+"/oauth2/auth/requests/consent?consent_challenge="+challenge, HydraGetResponse.class);
+        String consentUrl = properties.getBasePath()+properties.getOauthPath()+"consent?consent_challenge="+challenge;
+        ResponseEntity<HydraGetResponse> response = rt.getForEntity(consentUrl, HydraGetResponse.class);
         log.info("Consent response {}", response.toString());
 
         AdminApi apiInstance = getAdminApi();

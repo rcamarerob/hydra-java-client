@@ -3,6 +3,7 @@ server:
 
 hydra:
   basePath: http://hydra:4445
+  oauthPath: /oauth2/auth/requests/
 
 logging:
   level:

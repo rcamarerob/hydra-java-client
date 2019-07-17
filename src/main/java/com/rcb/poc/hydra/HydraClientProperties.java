@@ -13,4 +13,7 @@ public class HydraClientProperties {
 
     @Value("${hydra.basePath}")
     private String basePath;
+
+    @Value("${hydra.oauthPath}")
+    private String oauthPath;
 }
